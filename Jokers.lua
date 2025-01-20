@@ -66,14 +66,43 @@ SMODS.Joker {
 }
 
 SMODS.Joker {
-    key = 'Stopsign'.
+    key = 'Stopsign',
     loc_txt = {
         name = 'Stop Sign',
         text = {
-            "Disables effects of {C:attention}Boss Blinds,",
-            "destroyed at end of round."
+            "Disables effects of {C:attention}Boss Blinds{},",
+            "destroyed at end of ante"
         }
     },
-    config = { extra = { }}
+    config = {},
+    rarity = 2,
+    atlas = 'TestMod',
+    pos = { x = 1, y = 0 },
+    cost = 4,
+    blueprint_compat = false,
+    calculate = function(self, card, context)
+        if G.GAME.blind and G.GAME.blind.boss and not G.GAME.blind.disabled then
+            G.GAME.blind:disable()
+            return {
+                message = "Boss disabled!",
+                colour = G.C.GREEN
+            }
+        end
+        if context.end_of_round and G.GAME.blind.boss and not context.repetition and not context.blueprint then
+            G.E_MANAGER:add_event(Event({
+                func = function()
+                play_sound('tarot1')
+                card.T.r = -0.2
+                card:juice_up(0.3, 0.4)
+                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
+                    func = function()
+                        G.jokers:remove_card(card)
+                        card:start_dissolve()
+                        card = nil
+                    return true; end}))
+                return true
+            end
+        }))
+    end
+    end
 }
-

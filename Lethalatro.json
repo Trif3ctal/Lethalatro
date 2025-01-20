@@ -5,7 +5,7 @@
 	"author": ["Trif"],
 	"description": "A Lethal Company themed mod, with an expanded quota system, new Jokers, and more!",
 	"prefix": "Lethal",
-	"main_file": "Jokers.lua",
+	"main_file": "jokers.lua",
 	"priority": 0,
 	"badge_colour": "a31b03",
 	"badge_text_colour": "000000",
